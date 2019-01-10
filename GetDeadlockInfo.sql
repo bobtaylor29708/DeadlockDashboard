@@ -5,7 +5,7 @@ We grant You a nonexclusive, royalty-free right to use and modify the
 Sample Code and to reproduce and distribute the object code form of the Sample Code, provided that You agree: (i) to not use Our name, logo, or trademarks to market Your software product in which the Sample Code is embedded; 
 (ii) to include a valid copyright notice on Your software product in which the Sample Code is 
 embedded; and 
-(iii) to indemnify, hold harmless, and defend Us and Our suppliers from and against any claims or lawsuits, including attorneys’ fees, that arise or result from the use or distribution of the Sample Code.
+(iii) to indemnify, hold harmless, and defend Us and Our suppliers from and against any claims or lawsuits, including attorneysâ€™ fees, that arise or result from the use or distribution of the Sample Code.
 Please note: None of the conditions outlined in the disclaimer above will supercede the terms and conditions contained within the Premier Customer Services Description.
 */
 
@@ -47,9 +47,11 @@ BEGIN
         WHERE C.query('.').value('(/event/@name)[1]', 'varchar(255)') = 'xml_deadlock_report'
 	)
 	-- Now parse the data so we can consume it in Power BI
-	SELECT  DeadlockInfo.value('(//event/@timestamp)[1]','datetime') AS [TimeStamp]
+	SELECT  
+		   SERVERPROPERTY('servername') as [Server Name]
+		   ,DeadlockInfo.value('(//event/@timestamp)[1]','datetime') AS [TimeStamp]
 		   ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/@id)[1]','varchar(255)') AS [Process ID]
-	       ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/@hostname)[1]','varchar(255)') AS [Server Name]
+	           ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/@hostname)[1]','varchar(255)') AS [Host Name]
 		   ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/@currentdbname)[1]','varchar(255)') AS [Database Name]
 		   ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/@isolationlevel)[1]','varchar(255)') AS [Isolation Level]
 		   ,DeadlockInfo.value('(//data/value/deadlock/process-list/process/inputbuf)[1]','varchar(max)') AS [Input buffer 1]
